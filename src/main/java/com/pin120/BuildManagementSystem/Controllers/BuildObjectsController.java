@@ -116,6 +116,7 @@ public class BuildObjectsController {
             buildObject.setStatus("Завершён");
             buildObjectService.setEmployeesFree(id);
             buildObjectService.save(buildObject);
+            delete(id);
         }
         return "redirect:/objects/main";
     }

@@ -47,6 +47,8 @@ public class BuildObject {
     Calendar finishDate;
     @OneToMany(mappedBy = "buildObject", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Employee> employees;
+    @OneToMany(mappedBy = "buildObject", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ObjectPhoto> objectPhotos;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     Client client;

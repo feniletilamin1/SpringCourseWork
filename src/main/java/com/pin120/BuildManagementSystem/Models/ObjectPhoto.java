@@ -17,6 +17,12 @@ public class ObjectPhoto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     Long id;
+    @Column(nullable = false)
     String photoPath;
+    @Column(nullable = false)
     Calendar addDate;
+    String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "build_object_id")
+    BuildObject buildObject;
 }

@@ -18,7 +18,7 @@ public class EmployeesService {
     }
 
     public List<Employee> getAll(){
-        return (List<Employee>) employeesRepository.findAll(); //реализовали метод внедренного бина
+        return (List<Employee>) employeesRepository.findAll();
     }
 
     public Optional<Employee> getOneById(Long id) {

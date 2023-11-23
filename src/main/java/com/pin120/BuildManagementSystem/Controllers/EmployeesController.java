@@ -5,9 +5,11 @@ import com.pin120.BuildManagementSystem.Models.BuildObject;
 import com.pin120.BuildManagementSystem.Models.Employee;
 import com.pin120.BuildManagementSystem.Services.BuildObjectService;
 import com.pin120.BuildManagementSystem.Services.EmployeesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +38,7 @@ public class EmployeesController {
     @GetMapping("/new")
     public String add(Model model){
         model.addAttribute("employee", new Employee());
-        model.addAttribute("action", "add");
-        return "employees/form";
+        return "employees/new";
     }
 
     @GetMapping("/edit/{id}")
@@ -47,13 +48,8 @@ public class EmployeesController {
         if (employee.isEmpty()) {
             return "redirect:/employees/main";
         }
-        model.addAttribute("action", "update");
         model.addAttribute("employee", employee.get());
-        BuildObject buildObject = employee.get().getBuildObject();
-        if(buildObject != null) {
-            model.addAttribute("buildObjectId", buildObject.getId());
-        }
-        return "employees/form";
+        return "employees/edit";
     }
 
     @GetMapping("/details/{id}")
@@ -68,19 +64,49 @@ public class EmployeesController {
     }
 
     @PostMapping("/new")
-    public String add(@ModelAttribute Employee employee, @RequestParam Optional<MultipartFile> image, @RequestParam Optional<String> post, @RequestParam Optional<Long> buildObjectId) throws IOException, URISyntaxException {
+    public String add(@ModelAttribute @Valid Employee employee, BindingResult bindingResult, @RequestParam MultipartFile image, @RequestParam String post) throws IOException, URISyntaxException {
+        if(bindingResult.hasErrors()) {
+            return "employees/new";
+        }
+
+        String fileName = ImageHelper.generateUniqName() + ".jpeg";
+        ImageHelper.loadImage(fileName, "/employeesPhotos/", image);
+        employee.setPhoto("/employeesPhotos/" + fileName);
+
+        employee.setPost(post);
+        employee.setStatus("Свободен");
+
+        employeesService.save(employee);
+        return "redirect:/employees/main";
+    }
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute @Valid Employee employee, BindingResult bindingResult, @RequestParam Optional<MultipartFile> image, @RequestParam String post) throws IOException, URISyntaxException {
+        if(bindingResult.hasErrors()) {
+            return "employees/edit";
+        }
+
+        Optional<Employee> oldEmployee = employeesService.getOneById(employee.getId());
+
+        if(oldEmployee.isEmpty()) {
+            return "redirect:/employees/main";
+        }
+
         if(image.get().getSize() != 0) {
+            ImageHelper.deleteImage(oldEmployee.get().getPhoto());
             String fileName = ImageHelper.generateUniqName() + ".jpeg";
             ImageHelper.loadImage(fileName, "/employeesPhotos/", image.get());
             employee.setPhoto("/employeesPhotos/" + fileName);
         }
-        if(employee.getId() == null) {
-            employee.setPost(post.get());
-            employee.setStatus("Свободен");
+        else {
+            employee.setPhoto(oldEmployee.get().getPhoto());
         }
-        else if(buildObjectId.isPresent()) {
-            Optional<BuildObject> buildObject = buildObjectService.getOneById(buildObjectId.get());
-            employee.setBuildObject(buildObject.get());
+
+        employee.setPost(post);
+        employee.setStatus(oldEmployee.get().getStatus());
+
+        if(oldEmployee.get().getBuildObject() != null) {
+            employee.setBuildObject(oldEmployee.get().getBuildObject());
         }
 
         employeesService.save(employee);

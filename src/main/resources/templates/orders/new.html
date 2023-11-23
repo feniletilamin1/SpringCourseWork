@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title th:if="${action == 'add'}">Добавления клиента</title>
-    <title th:if="${action == 'update'}">Обновление клиента</title>
+    <title>Добавления заказа</title>
 </head>
 <body>
 <section class="section">
@@ -37,16 +36,16 @@
                                 </svg>
                             </div>
                             <span class="logo__text">
-                            Система управления
-                        </span>
+                    Система управления
+                </span>
                         </div>
                     </a>
                 </div>
                 <ul class="menu__list">
-                    <li class="menu__list-item menu__list-item--orders">
+                    <li class="menu__list-item menu__list-item--orders menu__list-item--active">
                         <a href="/orders/main" class="menu__link">Заказы</a>
                     </li>
-                    <li class="menu__list-item menu__list-item--clients menu__list-item--active">
+                    <li class="menu__list-item menu__list-item--clients">
                         <a href="/clients/main" class="menu__link">Клиенты</a>
                     </li>
                     <li class="menu__list-item menu__list-item--objects">
@@ -60,40 +59,32 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'add'}">Добавление
-                    клиента</h1>
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'update'}">Обновление
-                    клиента</h1>
-                <form th:action="@{/clients/new}" th:object="${client}" class="form" method="POST">
+                <h1 class="info__title info__title--margin-bottom40px">Добавление
+                    заказа</h1>
+                <form th:action="@{/orders/new}" th:object="${order}" action="#" class="form" method="POST">
 
-                    <input th:if="${action == 'update'}" type="hidden" th:field="*{id}" class="form__input" required>
+                    <label class="form__label">Клиент</label>
+                    <select name="clientId" class="form__input form__select" required>
+                        <option th:each="client: ${clients}" th:value="${client.id}" th:text="${client.lastName} + ' ' + ${client.firstName} + ' ' + ${client.middleName}"></option>
+                    </select>
 
-                    <label class="form__label">Фамилия</label>
-                    <input type="text" th:field="*{lastName}" class="form__input" required>
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                    <label class="form__label">Название</label>
+                    <input th:field="*{name}" type="text" class="form__input">
 
-                    <label class="form__label">Имя</label>
-                    <input type="text" th:field="*{firstName}" class="form__input" required>
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+                    <label class="form__label">Стоимость работ</label>
+                    <input th:field="*{price}" type="number" class="form__input">
 
-                    <label class="form__label">Отчество</label>
-                    <input type="text" th:field="*{middleName}" class="form__input">
-
-                    <label class="form__label">Телефон</label>
-                    <input type="text" th:field="*{phone}" class="form__input mask-phone" required>
-
-                    <label class="form__label">E-mail</label>
-                    <input type="text" th:field="*{email}" class="form__input" required>
-
-                    <input th:if="${action == 'add'}" type="submit" name="submit" class="form__submit" value="Добавить">
-                    <input th:if="${action == 'update'}" type="submit" name="submit" class="form__submit" value="Изменить">
-
+                    <input type="submit" name="submit" class="form__submit" value="Добавить">
                 </form>
             </div>
         </div>
     </div>
 </section>
 <script src="/js/jquery.min.js"></script>
-<script src="/js/jquery.maskedinput.min.js"></script>
 <script src="/js/choices.min.js"></script>
+<script src="/js/jquery.maskedinput.min.js"></script>
 <script src="/js/site.js"></script>
 </body>
 </html>

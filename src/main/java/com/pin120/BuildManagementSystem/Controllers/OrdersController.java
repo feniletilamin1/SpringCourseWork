@@ -4,11 +4,14 @@ import com.pin120.BuildManagementSystem.Models.Client;
 import com.pin120.BuildManagementSystem.Models.Order;
 import com.pin120.BuildManagementSystem.Services.ClientsService;
 import com.pin120.BuildManagementSystem.Services.OrdersService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +37,7 @@ public class OrdersController {
         List<Client> clients = clientsService.getAll();
         model.addAttribute("clients", clients);
         model.addAttribute("order", new Order());
-        model.addAttribute("action", "add");
-        return "orders/form";
+        return "orders/new";
     }
 
     @GetMapping("/edit/{id}")
@@ -46,10 +48,9 @@ public class OrdersController {
             return "redirect:/orders/main";
         }
         Optional<Client> client = clientsService.getOneById(order.get().getClient().getId());
-        model.addAttribute("action", "update");
         model.addAttribute("order", order.get());
         model.addAttribute("clientId", client.get().getId());
-        return "orders/form";
+        return "orders/edit";
     }
 
     @GetMapping("/details/{id}")
@@ -64,17 +65,34 @@ public class OrdersController {
     }
 
     @PostMapping("/new")
-    public String add(@ModelAttribute Order order, @RequestParam Optional<Long> clientId){
-        if(!clientId.isEmpty()) {
-            order.setAddDate(Calendar.getInstance());
-            Optional<Client> client = clientsService.getOneById(clientId.get());
-            order.setClient(client.get());
+    public String add(@ModelAttribute @Valid Order order, BindingResult bindingResult, @RequestParam Long clientId, Model model){
+        if(bindingResult.hasErrors()) {
+            List<Client> clients = clientsService.getAll();
+            model.addAttribute("clients", clients);
+            return "orders/new";
         }
-        else{
-            Optional<Order> oldOrder = ordersService.getOneById(order.getId());
-            order.setAddDate(oldOrder.get().getAddDate());
-            order.setClient(oldOrder.get().getClient());
+
+        order.setAddDate(new Date(new java.util.Date().getTime()));
+        Optional<Client> client = clientsService.getOneById(clientId);
+        if (client.isEmpty()) {
+            return "redirect:/orders/main";
         }
+        order.setClient(client.get());
+        ordersService.save(order);
+        return "redirect:/orders/main";
+    }
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute @Valid Order order, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            return "orders/edit";
+        }
+        Optional<Order> oldOrder = ordersService.getOneById(order.getId());
+        if (oldOrder.isEmpty()) {
+            return "redirect:/orders/main";
+        }
+        order.setAddDate(oldOrder.get().getAddDate());
+        order.setClient(oldOrder.get().getClient());
         ordersService.save(order);
         return "redirect:/orders/main";
     }

@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title th:if="${action == 'add'}">Добавления заказа</title>
-    <title th:if="${action == 'update'}">Обновление заказа</title>
+    <title>Добавление рабочего на объект</title>
 </head>
 <body>
 <section class="section">
@@ -37,19 +36,19 @@
                                 </svg>
                             </div>
                             <span class="logo__text">
-                    Система управления
-                </span>
+                            Система управления
+                        </span>
                         </div>
                     </a>
                 </div>
                 <ul class="menu__list">
-                    <li class="menu__list-item menu__list-item--orders menu__list-item--active">
+                    <li class="menu__list-item menu__list-item--orders">
                         <a href="/orders/main" class="menu__link">Заказы</a>
                     </li>
                     <li class="menu__list-item menu__list-item--clients">
                         <a href="/clients/main" class="menu__link">Клиенты</a>
                     </li>
-                    <li class="menu__list-item menu__list-item--objects">
+                    <li class="menu__list-item menu__list-item--objects menu__list-item--active">
                         <a href="/objects/main" class="menu__link">Объекты</a>
                     </li>
                     <li class="menu__list-item menu__list-item--employees">
@@ -60,35 +59,46 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'add'}">Добавление
-                    заказа</h1>
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'update'}">Обновление
-                    заказа</h1>
-                <form th:action="@{/orders/new}" th:object="${order}" action="#" class="form" method="POST">
-
-                    <input th:if="${action == 'update'}" type="hidden" th:field="*{id}" class="form__input" required>
-
-                    <label th:if="${action == 'add'}" class="form__label">Клиент</label>
-                    <select th:if="${action == 'add'}" name="clientId" class="form__input form__select" required>
-                        <option th:each="client: ${clients}" th:value="${client.id}" th:text="${client.lastName} + ' ' + ${client.firstName} + ' ' + ${client.middleName}"></option>
-                    </select>
-
-                    <label class="form__label">Название</label>
-                    <input th:field="*{name}" type="text" class="form__input" required>
-
-                    <label class="form__label">Стоимость работ</label>
-                    <input th:field="*{price}" type="number" class="form__input" required>
-
-                    <input th:if="${action == 'update'}" type="submit" name="submit" class="form__submit" value="Изменить">
-                    <input th:if="${action == 'add'}" type="submit" name="submit" class="form__submit" value="Добавить">
-                </form>
+                <h1 class="info__title">Выберите рабочего</h1>
+                <div class="info__table-wrapper">
+                    <table class="info__table">
+                        <tr class="info__table-row">
+                            <th class="info__table-column">№</th>
+                            <th class="info__table-column">Фото</th>
+                            <th class="info__table-column">Фамилия</th>
+                            <th class="info__table-column">Имя</th>
+                            <th class="info__table-column">Должность</th>
+                            <th class="info__table-column">Статус</th>
+                        </tr>
+                        <tr class="info__table-row" th:each="employee, itemStat: ${employees}">
+                            <td class="info__table-column" th:text="${itemStat.index + 1}"></td>
+                            <td class="info__table-column">
+                                <div class="info__table-column-avatar">
+                                    <img th:src="${employee.photo}" alt="avatar.jpg"
+                                         class="info__table-column-avatar-image">
+                                </div>
+                            </td>
+                            <td class="info__table-column" th:text="${employee.lastName}"></td>
+                            <td class="info__table-column" th:text="${employee.firstName}"></td>
+                            <td class="info__table-column" th:text="${employee.post}"></td>
+                            <td class="info__table-column" th:text="${employee.status}"></td>
+                            <td class="info__table-column">
+                                <a th:href="@{'/employees/details/' + ${employee.id}}" class="button button--blue">Подробнее</a>
+                            </td>
+                            <td class="info__table-column">
+                                <a href="#" class="button button--blue">Отзывы</a>
+                            </td>
+                            <td class="info__table-column">
+                                <a th:href="@{'/objects/addEmployee/' + ${employee.id} + '/' + ${buildObjectId}}" class="button button--blue">Выбрать</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <script src="/js/jquery.min.js"></script>
-<script src="/js/choices.min.js"></script>
-<script src="/js/jquery.maskedinput.min.js"></script>
 <script src="/js/site.js"></script>
 </body>
 </html>

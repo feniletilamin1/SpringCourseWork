@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title th:if="${action == 'add'}">Добавления объекта</title>
-    <title th:if="${action == 'update'}">Обновление объекта</title>
+    <title>Обновление объекта</title>
 </head>
 <body>
 <section class="section">
@@ -60,68 +59,63 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'add'}">Добавление
+                <h1 class="info__title info__title--margin-bottom40px">Обновление
                     объекта</h1>
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'update'}">Обновление
-                    объекта</h1>
-                <form th:action="@{/objects/new}" th:object="${buildObject}" class="form" method="POST">
-                    <input th:if="${action == 'update'}" type="hidden" th:field="*{id}" class="form__input" required>
+                <form th:action="@{/objects/edit}" th:object="${buildObject}" class="form" method="POST">
+                    <input type="hidden" th:field="*{id}" class="form__input" required>
 
-                    <input th:if="${action == 'update'}" type="hidden" class="form__input" th:field="*{status}">
-
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('objectName')}" th:errors="*{objectName}"></span>
                     <label class="form__label">Название</label>
-                    <input type="text" th:field="*{objectName}" class="form__input" required>
+                    <input type="text" th:field="*{objectName}" class="form__input">
 
-                    <input th:if="${action == 'update'}" type="hidden" class="form__input" name="clientId" th:value="${clientId}">
-
-                    <label th:if="${action == 'add'}" class="form__label">Клиент</label>
-                    <select th:if="${action == 'add'}" name="clientId" class="form__input form__select" required>
-                        <option th:each="client: ${clients}" th:value="${client.id}" th:text="${client.lastName} + ' ' + ${client.firstName} + ' ' + ${client.middleName}"></option>
-                    </select>
-
-                    <label th:if="${action == 'add'}" class="form__label">Прораб</label>
-                    <select th:if="${action == 'add'}" name="foremanId" class="form__input form__select" required>
-                        <option th:each="foreman: ${foremanList}" th:value="${foreman.id}" th:text="${foreman.lastName} + ' ' + ${foreman.firstName} + ' ' + ${foreman.middleName}"></option>
-                    </select>
-
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
                     <label class="form__label">Дата начала работ</label>
-                    <input th:attrappend="value=${action == 'update'}?@{${endDateWork}}" type="date" name="startDateWork" class="form__input" required>
+                    <input type="date" th:field="*{startDate}" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></span>
                     <label class="form__label">Дата окончания работ</label>
-                    <input th:attrappend="value=${action == 'update'}?@{${endDateWork}}" type="date" name="endDateWork" class="form__input" required>
+                    <input type="date" th:field="*{endDate}" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('objectCategory')}" th:errors="*{objectCategory}"></span>
                     <label class="form__label">Категория</label>
-                    <select name="category" class="form__input form__select" required>
-                        <option th:attrappend="selected=${category == 'Жилой объект'}?@{selected}" >Жилой объект</option>
-                        <option th:attrappend="selected=${category == 'Нежилой объект'}?@{selected}">Нежилой объект</option>
+                    <select th:field="*{objectCategory}" class="form__input form__select">
+                        <option th:selected="${buildObject.objectCategory == 'Жилой объект'}" value="Жилой объект">Жилой объект</option>
+                        <option th:selected="${buildObject.objectCategory == 'Нежилой объект'}" value="Нежилой объект">Нежилой объект</option>
                     </select>
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
                     <label class="form__label">Стоимость работ</label>
-                    <input th:field="*{price}" type="number" class="form__input" required>
+                    <input th:field="*{price}" type="number" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
                     <label class="form__label">Телефон</label>
-                    <input type="text" th:field="*{phone}" class="form__input mask-phone" required>
+                    <input type="text" th:field="*{phone}" class="form__input mask-phone">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('indexRegion')}" th:errors="*{indexRegion}"></span>
                     <label class="form__label">Индекс</label>
-                    <input type="text" th:field="*{indexRegion}" class="form__input mask-index" required>
+                    <input type="text" th:field="*{indexRegion}" class="form__input mask-index">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('region')}" th:errors="*{region}"></span>
                     <label class="form__label">Регион</label>
-                    <input type="text" th:field="*{region}" class="form__input" required>
+                    <input type="text" th:field="*{region}" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
                     <label class="form__label">Город</label>
-                    <input type="text" th:field="*{city}" class="form__input" name="City" required>
+                    <input type="text" th:field="*{city}" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></span>
                     <label class="form__label">Улица</label>
-                    <input type="text" th:field="*{street}" class="form__input" required>
+                    <input type="text" th:field="*{street}" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('home')}" th:errors="*{home}"></span>
                     <label class="form__label">Дом</label>
-                    <input th:field="*{home}" type="text" class="form__input" required>
+                    <input th:field="*{home}" type="text" class="form__input">
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('flat')}" th:errors="*{flat}"></span>
                     <label class="form__label">Квартира</label>
                     <input th:field="*{flat}" type="number" class="form__input">
 
-                    <input th:if="${action == 'update'}" type="submit" name="submit" class="form__submit" value="Изменить">
-                    <input th:if="${action == 'add'}" type="submit" name="submit" class="form__submit" value="Добавить">
+                    <input type="submit" name="submit" class="form__submit" value="Изменить">
                 </form>
             </div>
         </div>

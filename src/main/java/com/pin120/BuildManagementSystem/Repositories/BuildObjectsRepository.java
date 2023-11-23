@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BuildObjectsRepository extends CrudRepository<BuildObject, Long> {
     @Query("SELECT COUNT(b) FROM BuildObject b WHERE b.status = 'В работе'")
@@ -18,6 +20,9 @@ public interface BuildObjectsRepository extends CrudRepository<BuildObject, Long
 
     @Query("SELECT e FROM Employee e WHERE e.post = 'Прораб' and e.buildObject.id = :buildObjectId")
     Employee getForemanObject(Long buildObjectId);
+
+    @Query("SELECT e FROM Employee e WHERE e.buildObject.id = :buildObjectId")
+    List<Employee> getObjectEmployees(Long buildObjectId);
 
     @Transactional
     @Modifying

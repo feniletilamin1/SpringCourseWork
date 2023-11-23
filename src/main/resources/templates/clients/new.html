@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title th:if="${action == 'add'}">Добавление рабочего</title>
-    <title th:if="${action == 'update'}">Обновление рабочего</title>
+    <title>Добавления клиента</title>
 </head>
 <body>
 <section class="section">
@@ -31,6 +30,7 @@
                                         <linearGradient id="paint0_linear_584_285" x1="11" y1="9" x2="23" y2="23"
                                                         gradientUnits="userSpaceOnUse">
                                             <stop stop-color="white" stop-opacity="0.7"/>
+                                            <stop offset="1" stop-color="white"/>
                                         </linearGradient>
                                     </defs>
                                 </svg>
@@ -45,13 +45,13 @@
                     <li class="menu__list-item menu__list-item--orders">
                         <a href="/orders/main" class="menu__link">Заказы</a>
                     </li>
-                    <li class="menu__list-item menu__list-item--clients">
+                    <li class="menu__list-item menu__list-item--clients menu__list-item--active">
                         <a href="/clients/main" class="menu__link">Клиенты</a>
                     </li>
                     <li class="menu__list-item menu__list-item--objects">
                         <a href="/objects/main" class="menu__link">Объекты</a>
                     </li>
-                    <li class="menu__list-item menu__list-item--employees menu__list-item--active">
+                    <li class="menu__list-item menu__list-item--employees">
                         <a href="/employees/main" class="menu__link">Рабочие</a>
                     </li>
                 </ul>
@@ -59,46 +59,30 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'add'}">Добавление
-                    рабочего</h1>
-                <h1 class="info__title info__title--margin-bottom40px" th:if="${action == 'update'}">Обновление
-                    рабочего</h1>
-                <form th:action="@{/employees/new}" th:object="${employee}" class="form" method="POST" enctype="multipart/form-data">
-                    <input th:if="${action == 'update'}" type="hidden" th:field="*{id}" class="form__input">
-                    <input th:if="${action == 'update'}" type="hidden" th:field="*{photo}" class="form__input">
+                <h1 class="info__title info__title--margin-bottom40px">Добавление
+                    клиента</h1>
+                <form th:action="@{/clients/new}" th:object="${client}" class="form" method="POST">
 
-                    <label class="form__label">Аватар</label>
-                    <input th:attrappend="required=${action != 'update'}?@{true}" type="file" name="image" class="form__input" accept="image/*">
-
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
                     <label class="form__label">Фамилия</label>
-                    <input type="text" class="form__input" th:field="*{lastName}" required>
+                    <input type="text" th:field="*{lastName}" class="form__input" >
 
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
                     <label class="form__label">Имя</label>
-                    <input type="text" class="form__input" th:field="*{firstName}" required>
+                    <input type="text" th:field="*{firstName}" class="form__input">
 
                     <label class="form__label">Отчество</label>
-                    <input type="text" class="form__input" th:field="*{middleName}">
+                    <input type="text" th:field="*{middleName}" class="form__input">
 
-                    <label class="form__label">Специальность</label>
-                    <input type="text" class="form__input" th:field="*{speciality}" required>
-
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
                     <label class="form__label">Телефон</label>
-                    <input type="text" class="form__input mask-phone" th:field="*{phone}" required>
+                    <input type="text" th:field="*{phone}" class="form__input mask-phone" />
 
-                    <input th:if="${action == 'update'}" type="hidden" class="form__input" th:field="*{status}" required>
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    <label class="form__label">E-mail</label>
+                    <input type="text" th:field="*{email}" class="form__input">
 
-                    <input th:if="${action == 'update'}" type="hidden" name="buildObjectId" class="form__input" th:value="${buildObjectId}" required>
-
-                    <input th:if="${action == 'update'}" type="hidden" name="buildObjectId" class="form__input" th:field="*{post}" required>
-
-                    <label th:if="${action == 'add'}" class="form__label">Должность</label>
-                    <select th:if="${action == 'add'}" name="post" class="form__input form__select" required>
-                        <option value="Рабочий">Рабочий</option>
-                        <option value="Прораб">Прораб</option>
-                    </select>
-
-                    <input th:if="${action == 'add'}" type="submit" name="submit" class="form__submit" value="Добавить">
-                    <input th:if="${action == 'update'}" type="submit" name="submit" class="form__submit" value="Изменить">
+                    <input type="submit" name="submit" class="form__submit" value="Добавить">
                 </form>
             </div>
         </div>

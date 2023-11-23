@@ -44,8 +44,11 @@ public class BuildObjectService {
     public Employee getForemanObject(Long buildObjectId) {
         return buildObjectsRepository.getForemanObject(buildObjectId);
     }
-
     public void setEmployeesFree(Long id) {
         buildObjectsRepository.setEmployeesFree(id);
+    }
+
+    public List<Employee> getObjectEmployees(Long buildObjectId) {
+        return buildObjectsRepository.getObjectEmployees(buildObjectId);
     }
 }

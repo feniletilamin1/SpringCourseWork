@@ -2,11 +2,14 @@ package com.pin120.BuildManagementSystem.Controllers;
 
 import com.pin120.BuildManagementSystem.Models.Client;
 import com.pin120.BuildManagementSystem.Services.ClientsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Binding;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +30,7 @@ public class ClientsController {
     @GetMapping("/new")
     public String add(Model model){
         model.addAttribute("client", new Client());
-        model.addAttribute("action", "add");
-        return "clients/form";
+        return "clients/new";
     }
 
     @GetMapping("/edit/{id}")
@@ -38,9 +40,9 @@ public class ClientsController {
         if (client.isEmpty()) {
             return "redirect:/clients/main";
         }
-        model.addAttribute("action", "update");
+
         model.addAttribute("client", client.get());
-        return "clients/form";
+        return "clients/edit";
     }
 
     @GetMapping("/details/{id}")
@@ -55,12 +57,25 @@ public class ClientsController {
     }
 
     @PostMapping("/new")
-    public String add(@ModelAttribute Client client){
-        if(client.getId() != null) {
-            Optional<Client> oldClient = clientsService.getOneById(client.getId());
-            client.setOrders(oldClient.get().getOrders());
-            client.setBuildObjects(oldClient.get().getBuildObjects());
+    public String add(@ModelAttribute @Valid Client client, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            return "clients/new";
         }
+        clientsService.save(client);
+        return "redirect:/clients/main";
+    }
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute @Valid Client client, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            return "clients/edit";
+        }
+        Optional<Client> oldClient = clientsService.getOneById(client.getId());
+        if (oldClient.isEmpty()) {
+            return "redirect:/clients/main";
+        }
+        client.setOrders(oldClient.get().getOrders());
+        client.setBuildObjects(oldClient.get().getBuildObjects());
         clientsService.save(client);
         return "redirect:/clients/main";
     }

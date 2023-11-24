@@ -71,7 +71,8 @@
                     </div>
                     <div class="info__details-item">
                         <p class="info__details-item-name">Прораб:</p>
-                        <a th:href="@{'/employees/details/' + ${foreman.id}}" class="info__details-item-text info__details-item-text--underlined" th:text="${foreman.lastName} + ' ' + ${foreman.firstName} + ' ' + ${foreman.middleName}"></a>
+                        <a th:if="${foreman != null}" th:href="@{'/employees/details/' + ${foreman.id}}" class="info__details-item-text info__details-item-text--underlined" th:text="${foreman.lastName} + ' ' + ${foreman.firstName} + ' ' + ${foreman.middleName}"></a>
+                        <p class="info__details-item-text" th:text="Отсутствует"></p>
                     </div>
                     <div class="info__details-item">
                         <p class="info__details-item-name">Статус:</p>

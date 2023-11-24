@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ObjectPhotosRepository extends CrudRepository<ObjectPhoto, Long> {
-    @Query("SELECT p FROM ObjectPhoto p WHERE p.buildObject.id=:id")
+    @Query("SELECT p FROM ObjectPhoto p WHERE p.buildObject.id = :id")
     List<ObjectPhoto> getObjectPhotos(Long id);
 }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title>Добавление рабочего</title>
+    <title>Добавление отзыва</title>
 </head>
 <body>
 <section class="section">
@@ -58,41 +58,23 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px">Добавление
-                    рабочего</h1>
-                <form th:action="@{/employees/new}" th:object="${employee}" class="form" method="POST"
-                      enctype="multipart/form-data">
+                <h1 class="info__title info__title--margin-bottom40px">Добавление нового отзыва</h1>
+                <form th:action="@{'/feedbacks/new/' + ${employeeId}}" th:object="${feedback}" class="form" method="POST">
 
-                    <label class="form__label">Аватар</label>
-                    <input type="file" name="image" class="form__input" accept="image/*" required>
+                    <input type="hidden" th:value="${employeeId}" name="employeeId">
 
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('lastName')}"
-                          th:errors="*{lastName}"></span>
-                    <label class="form__label">Фамилия</label>
-                    <input type="text" class="form__input" th:field="*{lastName}">
+                    <label class="form__label">Текст отзыва</label>
+                    <input th:field="*{feedbackText}" type="text" class="form__input">
 
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('firstName')}"
-                          th:errors="*{firstName}"></span>
-                    <label class="form__label">Имя</label>
-                    <input type="text" class="form__input" th:field="*{firstName}">
-
-                    <label class="form__label">Отчество</label>
-                    <input type="text" class="form__input" th:field="*{middleName}">
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('speciality')}"
-                          th:errors="*{speciality}"></span>
-                    <label class="form__label">Специальность</label>
-                    <input type="text" class="form__input" th:field="*{speciality}">
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('phone')}"
-                          th:errors="*{phone}"></span>
-                    <label class="form__label">Телефон</label>
-                    <input type="text" class="form__input mask-phone" th:field="*{phone}">
-
-                    <label class="form__label">Должность</label>
-                    <select name="post" class="form__input form__select" required>
-                        <option value="Рабочий">Рабочий</option>
-                        <option value="Прораб">Прораб</option>
+                    <span class="form__validation-text" th:if="${#fields.hasErrors('feedbackScore')}"
+                          th:errors="*{feedbackScore}"></span>
+                    <label class="form__label"></label>
+                    <select th:field="*{feedbackScore}" class="form__input form__select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
                     </select>
 
                     <input type="submit" name="submit" class="form__submit" value="Добавить">

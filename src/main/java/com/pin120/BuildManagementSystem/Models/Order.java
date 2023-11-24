@@ -28,7 +28,6 @@ public class Order {
     @NotBlank(message = "Введите название")
     @Column(nullable = false)
     String name;
-
     @NotNull(message = "Введите значение")
     @Column(nullable = false)
     BigDecimal price;

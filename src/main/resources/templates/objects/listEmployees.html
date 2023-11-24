@@ -60,7 +60,7 @@
         <div class="info">
             <div class="info__wrapper">
                 <h1 class="info__title info__title--margin-bottom40px">Список рабочих объекта</h1>
-                <a th:if="${status = 'В работе'}" href="#" class="button button--blue button--self-started">Добавить рабочего</a>
+                <a th:if="${status == 'В работе'}" th:href="@{'/objects/addEmployee/' + ${buildObjectId}}" class="button button--blue button--self-started">Добавить рабочего</a>
                 <div class="info__table-wrapper">
                     <table class="info__table">
                         <tr class="info__table-row">
@@ -96,7 +96,7 @@
                                 <a th:href="@{'/employees/edit/' + ${employee.id}}" class="button button--blue">Редактировать</a>
                             </td>
                             <td th:if="${employee.post != 'Прораб'}" class="info__table-column">
-                                <a th:href="@{'/employees/delete/' + ${employee.id}}" class="delete-btn">X</a>
+                                <a th:href="@{'/objects/deleteEmployeeFromObject/' + ${employee.id} + '/' + ${buildObjectId}}" class="delete-btn">X</a>
                             </td>
                         </tr>
                     </table>

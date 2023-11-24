@@ -38,4 +38,8 @@ public class EmployeesService {
     public List<Employee> getForemanList() {
         return employeesRepository.getForemanList();
     }
-}
+
+    public List<Employee> getFreeEmployees() {
+        return employeesRepository.getFreeEmployees();
+    }
+ }

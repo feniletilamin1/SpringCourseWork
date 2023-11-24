@@ -101,7 +101,8 @@
                                 <a th:href="@{'/employees/details/' + ${employee.id}}" class="button button--blue">Подробнее</a>
                             </td>
                             <td class="info__table-column">
-                                <a href="#" class="button button--blue">Отзывы</a>
+                                <a th:href="@{'/feedbacks/main/' + ${employee.id}}"
+                                   class="button button--blue">Отзывы</a>
                             </td>
                             <td class="info__table-column">
                                 <a href="#" class="button button--blue">Получить отчёт</a>

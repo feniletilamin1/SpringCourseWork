@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title>Добавление рабочего</title>
+    <title>Отзывы</title>
 </head>
 <body>
 <section class="section">
@@ -58,45 +58,23 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title info__title--margin-bottom40px">Добавление
-                    рабочего</h1>
-                <form th:action="@{/employees/new}" th:object="${employee}" class="form" method="POST"
-                      enctype="multipart/form-data">
-
-                    <label class="form__label">Аватар</label>
-                    <input type="file" name="image" class="form__input" accept="image/*" required>
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('lastName')}"
-                          th:errors="*{lastName}"></span>
-                    <label class="form__label">Фамилия</label>
-                    <input type="text" class="form__input" th:field="*{lastName}">
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('firstName')}"
-                          th:errors="*{firstName}"></span>
-                    <label class="form__label">Имя</label>
-                    <input type="text" class="form__input" th:field="*{firstName}">
-
-                    <label class="form__label">Отчество</label>
-                    <input type="text" class="form__input" th:field="*{middleName}">
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('speciality')}"
-                          th:errors="*{speciality}"></span>
-                    <label class="form__label">Специальность</label>
-                    <input type="text" class="form__input" th:field="*{speciality}">
-
-                    <span class="form__validation-text" th:if="${#fields.hasErrors('phone')}"
-                          th:errors="*{phone}"></span>
-                    <label class="form__label">Телефон</label>
-                    <input type="text" class="form__input mask-phone" th:field="*{phone}">
-
-                    <label class="form__label">Должность</label>
-                    <select name="post" class="form__input form__select" required>
-                        <option value="Рабочий">Рабочий</option>
-                        <option value="Прораб">Прораб</option>
-                    </select>
-
-                    <input type="submit" name="submit" class="form__submit" value="Добавить">
-                </form>
+                <h1 class="info__title">Отзывы о рабочем</h1>
+                <a th:href="@{'/feedbacks/new/' + ${employeeId}}"
+                   class="info__button button button--blue button--self-started">Добавить отзыв</a>
+                <div class="info__feedbacks-wrapper">
+                    <div th:each="feedback, itemStat: ${feedbacks}" class="feedback">
+                        <p th:text="'Отзыв №' + ${itemStat.index + 1}" class="feedback__text"></p>
+                        <p th:text="'Дата добавления: ' + ${#dates.format(feedback.addDate, 'dd-MM-yyyy') + ' г.'}"
+                           class="feedback__text"></p>
+                        <p th:if="${feedback.feedbackText != null}" th:text="'Текст отзыва: ' + ${feedback.feedbackText}" class="feedback__text"></p>
+                        <p th:if="${feedback.feedbackText == null}" th:text="'Текст отзыва: отсутствует'" class="feedback__text"></p>
+                        <span th:text="'Оценка: ' + ${feedback.feedbackScore} + '/5'" class="feedback__score"></span>
+                        <div class="info__buttons-wrapper">
+                            <a th:href="@{'/feedbacks/edit/' + ${feedback.id} + '/' + ${employeeId}}" class="button button--blue button--self-started info__buttons-wrapper-button">Редактировать</a>
+                            <a th:href="@{'/feedbacks/delete/' + ${feedback.id} + '/' + ${employeeId}}" class="delete-btn">X</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

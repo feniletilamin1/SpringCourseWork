@@ -37,7 +37,7 @@ public class BuildObjectsController {
     }
 
     @GetMapping("/new")
-    public String add(Model model){
+    public String add(Model model) {
         model.addAttribute("clients", clientsService.getAll());
         model.addAttribute("buildObject", new BuildObject());
         model.addAttribute("foremanList", employeesService.getForemanList());
@@ -45,20 +45,20 @@ public class BuildObjectsController {
     }
 
     @PostMapping("/new")
-    public String add(Model model, @ModelAttribute @Valid BuildObject buildObject, BindingResult bindingResult, @RequestParam Long clientId, @RequestParam Long foremanId){
-        if(bindingResult.hasErrors()) {
+    public String add(Model model, @ModelAttribute @Valid BuildObject buildObject, BindingResult bindingResult, @RequestParam Long clientId, @RequestParam Long foremanId) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("clients", clientsService.getAll());
             model.addAttribute("foremanList", employeesService.getForemanList());
             return "objects/new";
         }
 
         Optional<Client> client = clientsService.getOneById(clientId);
-        if(client.isEmpty()){
+        if (client.isEmpty()) {
             return "redirect:/objects/main";
         }
 
         Optional<Employee> employee = employeesService.getOneById(foremanId);
-        if(employee.isEmpty()) {
+        if (employee.isEmpty()) {
             return "redirect:/objects/main";
         }
 
@@ -75,9 +75,9 @@ public class BuildObjectsController {
     }
 
     @PostMapping("/edit")
-    public String edit(@ModelAttribute BuildObject buildObject){
+    public String edit(@ModelAttribute BuildObject buildObject) {
         Optional<BuildObject> oldBuildObject = buildObjectService.getOneById(buildObject.getId());
-        if(oldBuildObject.isEmpty()) {
+        if (oldBuildObject.isEmpty()) {
             return "redirect:/objects/main";
         }
 
@@ -92,7 +92,7 @@ public class BuildObjectsController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model){
+    public String edit(@PathVariable("id") Long id, Model model) {
         Optional<BuildObject> buildObject =
                 buildObjectService.getOneById(id);
         if (buildObject.isEmpty()) {
@@ -137,13 +137,58 @@ public class BuildObjectsController {
     @GetMapping("/employees/{buildObjectId}")
     public String employeesList(Model model, @PathVariable("buildObjectId") Long buildObjectId) {
         Optional<BuildObject> buildObject = buildObjectService.getOneById(buildObjectId);
-        if(buildObject.isEmpty()) {
+        if (buildObject.isEmpty()) {
             return "redirect:/objects/main";
         }
 
         List<Employee> employees = buildObjectService.getObjectEmployees(buildObjectId);
         model.addAttribute("employees", employees);
         model.addAttribute("status", buildObject.get().getStatus());
+        model.addAttribute("buildObjectId", buildObjectId);
         return "objects/listEmployees";
+    }
+
+    @GetMapping("/addEmployee/{buildObjectId}")
+    public String addEmployee(Model model, @PathVariable("buildObjectId") Long buildObjectId) {
+        if (!buildObjectService.existsById(buildObjectId)) {
+            return "redirect:/objects/main";
+        }
+
+        List<Employee> freeEmployees = employeesService.getFreeEmployees();
+        model.addAttribute("employees", freeEmployees);
+        model.addAttribute("buildObjectId", buildObjectId);
+        return "objects/addEmployeeOnObject";
+    }
+
+    @GetMapping("addEmployee/{employeeId}/{buildObjectId}")
+    public String addEmployee(@PathVariable("employeeId") Long employeeId, @PathVariable("buildObjectId") Long buildObjectId) {
+        Optional<BuildObject> buildObject = buildObjectService.getOneById(buildObjectId);
+        Optional<Employee> employee = employeesService.getOneById(employeeId);
+
+        if(employee.isEmpty() || buildObject.isEmpty()) {
+            return "redirect:/objects/main";
+        }
+
+        employee.get().setStatus("Занят");
+        employee.get().setBuildObject(buildObject.get());
+        employeesService.save(employee.get());
+
+        return "redirect:/objects/employees/{buildObjectId}";
+    }
+
+    @GetMapping("deleteEmployeeFromObject/{employeeId}/{buildObjectId}")
+    public String deleteEmployeeFromObject(@PathVariable("employeeId") Long employeeId, @PathVariable("buildObjectId") Long buildObjectId) {
+        Optional<BuildObject> buildObject = buildObjectService.getOneById(buildObjectId);
+        Optional<Employee> employee = employeesService.getOneById(employeeId);
+
+        if(employee.isEmpty() || buildObject.isEmpty()) {
+            return "redirect:/objects/main";
+        }
+
+        employee.get().setStatus("Свободен");
+        employee.get().setBuildObject(null);
+        employeesService.save(employee.get());
+
+        return "redirect:/objects/employees/{buildObjectId}";
     }
 }

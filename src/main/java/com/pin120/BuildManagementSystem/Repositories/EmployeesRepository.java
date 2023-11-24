@@ -17,4 +17,7 @@ public interface EmployeesRepository extends CrudRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e WHERE e.post='Прораб' and e.status='Свободен'")
     List<Employee> getForemanList();
+
+    @Query("SELECT e FROM Employee e WHERE e.post='Рабочий' and e.status='Свободен'")
+    List<Employee> getFreeEmployees();
 }

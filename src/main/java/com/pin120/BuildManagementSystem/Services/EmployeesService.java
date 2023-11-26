@@ -1,5 +1,6 @@
 package com.pin120.BuildManagementSystem.Services;
 
+import com.pin120.BuildManagementSystem.Models.BuildObject;
 import com.pin120.BuildManagementSystem.Models.Employee;
 import com.pin120.BuildManagementSystem.Repositories.EmployeesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,9 @@ public class EmployeesService {
     public Long freeEmployeesCount() {
         return employeesRepository.freeEmployeesCount();
     }
+
     public Long busyEmployeesCount() { return employeesRepository.busyEmployeesCount(); }
+
     public Boolean existsById(Long id) { return employeesRepository.existsById(id); }
 
     public List<Employee> getForemanList() {
@@ -41,5 +44,9 @@ public class EmployeesService {
 
     public List<Employee> getFreeEmployees() {
         return employeesRepository.getFreeEmployees();
+    }
+
+    public List<BuildObject> getForemanObjects(Long foremanId) {
+        return employeesRepository.getForemanObjects(foremanId);
     }
  }

@@ -104,6 +104,8 @@ public class EmployeesController {
 
         employee.setPost(post);
         employee.setStatus(oldEmployee.get().getStatus());
+        employee.setFeedbacks(oldEmployee.get().getFeedbacks());
+        employee.setBuildObjectsHistory(oldEmployee.get().getBuildObjectsHistory());
 
         if(oldEmployee.get().getBuildObject() != null) {
             employee.setBuildObject(oldEmployee.get().getBuildObject());
@@ -121,5 +123,20 @@ public class EmployeesController {
             ImageHelper.deleteImage(employee.get().getPhoto());
         }
         return "redirect:/employees/main";
+    }
+
+    @GetMapping("/foremanObjects/{foremanId}")
+    public String foremanObjects(Model model, @PathVariable("foremanId") Long foremanId) {
+        Optional<Employee> foreman = employeesService.getOneById(foremanId);
+
+        if(foreman.isEmpty() || !foreman.get().getPost().equals("Прораб")) {
+            return "redirect:/employees/main";
+        }
+
+        List<BuildObject> buildObjects = employeesService.getForemanObjects(foremanId);
+
+        model.addAttribute("buildObjects", buildObjects);
+
+        return "employees/foremanHistory";
     }
 }

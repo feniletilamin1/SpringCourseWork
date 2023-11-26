@@ -43,4 +43,6 @@ public class Employee {
     String photo;
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "foremanHistory", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BuildObject> buildObjectsHistory;
 }

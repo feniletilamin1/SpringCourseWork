@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/reseter.css">
     <link rel="stylesheet" href="/css/choices.min.css"/>
     <link rel="stylesheet" href="/css/site.css"/>
-    <title>Рабочие</title>
+    <title>История объектов прораба</title>
 </head>
 <body>
 <section class="section">
@@ -59,59 +59,33 @@
         </div>
         <div class="info">
             <div class="info__wrapper">
-                <h1 class="info__title">Сотрудники</h1>
-                <div class="info__card-wrapper">
-                    <div class="info-card">
-                        <span class="info-card__title">Всего</span>
-                        <span class="info-card__value" th:text="${listCount}"></span>
-                    </div>
-                    <div class="info-card">
-                        <span class="info-card__title">Заняты</span>
-                        <span class="info-card__value" th:text="${busyEmployeesListCount}"></span>
-                    </div>
-                    <div class="info-card">
-                        <span class="info-card__title">Свободны</span>
-                        <span class="info-card__value" th:text="${freeEmployeesListCount}"></span>
-                    </div>
-                </div>
-                <a href="/employees/new" class="button button--blue button--self-started">Добавить сотрудника</a>
+                <h1 class="info__title">История объектов прораба</h1>
                 <div class="info__table-wrapper">
                     <table class="info__table">
                         <tr class="info__table-row">
                             <th class="info__table-column">№</th>
-                            <th class="info__table-column">Фото</th>
-                            <th class="info__table-column">Фамилия</th>
-                            <th class="info__table-column">Имя</th>
-                            <th class="info__table-column">Должность</th>
+                            <th class="info__table-column">Название</th>
+                            <th class="info__table-column">Категория</th>
                             <th class="info__table-column">Статус</th>
+                            <th class="info__table-column">Стоимость</th>
                         </tr>
-                        <tr class="info__table-row" th:each="employee, itemStat: ${employees}">
+                        <tr class="info__table-row" th:each="buildObject, itemStat: ${buildObjects}">
                             <td class="info__table-column" th:text="${itemStat.index + 1}"></td>
+                            <td class="info__table-column" th:text="${buildObject.objectName}"></td>
+                            <td class="info__table-column" th:text="${buildObject.objectCategory}"></td>
+                            <td class="info__table-column" th:text="${buildObject.status}"></td>
+                            <td class="info__table-column" th:text="${buildObject.price} + ' .руб'"></td>
                             <td class="info__table-column">
-                                <div class="info__table-column-avatar">
-                                    <img th:src="${employee.photo}" alt="avatar.jpg"
-                                         class="info__table-column-avatar-image">
-                                </div>
-                            </td>
-                            <td class="info__table-column" th:text="${employee.lastName}"></td>
-                            <td class="info__table-column" th:text="${employee.firstName}"></td>
-                            <td class="info__table-column" th:text="${employee.post}"></td>
-                            <td class="info__table-column" th:text="${employee.status}"></td>
-                            <td class="info__table-column">
-                                <a th:href="@{'/employees/details/' + ${employee.id}}" class="button button--blue">Подробнее</a>
+                                <a th:href="@{'/objects/details/' + ${buildObject.id}}" class="button button--blue">Подробнее</a>
                             </td>
                             <td class="info__table-column">
-                                <a th:href="@{'/feedbacks/main/' + ${employee.id}}"
-                                   class="button button--blue">Отзывы</a>
-                            </td>
-                            <td th:if="${employee.post == 'Прораб'}" class="info__table-column">
-                                <a th:href="@{'/employees/foremanObjects/' + ${employee.id}}" class="button button--blue">Получить отчёт</a>
+                                <a th:href="@{'/objects/photos/main/' + ${buildObject.id}}" class="button button--blue">Фотографии</a>
                             </td>
                             <td class="info__table-column">
-                                <a th:href="@{'/employees/edit/' + ${employee.id}}" class="button button--blue">Редактировать</a>
+                                <a th:href="@{'/objects/employees/' + ${buildObject.id}}" class="button button--blue">Список рабочих</a>
                             </td>
-                            <td class="info__table-column">
-                                <a th:href="@{'/employees/delete/' + ${employee.id}}" class="delete-btn">X</a>
+                            <td th:if="${buildObject.status == 'В работе'}" class="info__table-column">
+                                <a th:href="@{'/objects/edit/' + ${buildObject.id}}" class="button button--blue">Редактировать</a>
                             </td>
                         </tr>
                     </table>

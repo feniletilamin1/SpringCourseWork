@@ -1,5 +1,6 @@
 package com.pin120.BuildManagementSystem.Repositories;
 
+import com.pin120.BuildManagementSystem.Models.BuildObject;
 import com.pin120.BuildManagementSystem.Models.Employee;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -20,4 +21,7 @@ public interface EmployeesRepository extends CrudRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e WHERE e.post='Рабочий' and e.status='Свободен'")
     List<Employee> getFreeEmployees();
+
+    @Query("SELECT o FROM BuildObject o WHERE o.foremanHistory.id = :foremanId")
+    List<BuildObject> getForemanObjects(Long foremanId);
 }

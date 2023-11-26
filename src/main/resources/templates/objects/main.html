@@ -97,7 +97,8 @@
                                 <a th:href="@{'/objects/photos/main/' + ${buildObject.id}}" class="button button--blue">Фотографии</a>
                             </td>
                             <td class="info__table-column">
-                                <a th:href="@{'/objects/employees/' + ${buildObject.id}}" class="button button--blue">Список рабочих</a>
+                                <a th:href="@{'/objects/employees/' + ${buildObject.id}}" class="button button--blue">Список
+                                    рабочих</a>
                             </td>
                             <td th:if="${buildObject.status == 'В работе'}" class="info__table-column">
                                 <a th:href="@{'/objects/edit/' + ${buildObject.id}}" class="button button--blue">Редактировать</a>

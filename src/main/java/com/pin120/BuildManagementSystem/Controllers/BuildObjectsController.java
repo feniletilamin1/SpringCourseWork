@@ -64,6 +64,7 @@ public class BuildObjectsController {
 
         buildObject.setClient(client.get());
         buildObject.setStatus("В работе");
+        buildObject.setForemanHistory(employee.get());
 
         buildObject = buildObjectService.save(buildObject);
 

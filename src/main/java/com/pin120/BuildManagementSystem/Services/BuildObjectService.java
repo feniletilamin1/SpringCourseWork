@@ -41,9 +41,11 @@ public class BuildObjectService {
     public Long inWorkBuildObjectsCount() {
         return buildObjectsRepository.inWorkBuildObjectsCount();
     }
+
     public Employee getForemanObject(Long buildObjectId) {
         return buildObjectsRepository.getForemanObject(buildObjectId);
     }
+
     public void setEmployeesFree(Long id) {
         buildObjectsRepository.setEmployeesFree(id);
     }

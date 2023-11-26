@@ -55,7 +55,6 @@ public class BuildObject {
     @NotBlank(message = "Введите дом")
     @Column(nullable = false)
     String home;
-    @NotNull(message = "Введите квартиру")
     Integer flat;
     Date finishDate;
     @OneToMany(mappedBy = "buildObject", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,4 +64,8 @@ public class BuildObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     Client client;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "foreman_history_id")
+    Employee foremanHistory;
 }

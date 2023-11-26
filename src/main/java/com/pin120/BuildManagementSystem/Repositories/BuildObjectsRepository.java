@@ -28,4 +28,5 @@ public interface BuildObjectsRepository extends CrudRepository<BuildObject, Long
     @Modifying
     @Query("UPDATE Employee SET buildObject = null, status = 'Свободен' WHERE buildObject.id = :buildObjectId")
     void setEmployeesFree(Long buildObjectId);
+
 }
